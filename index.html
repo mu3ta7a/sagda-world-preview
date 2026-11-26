@@ -610,6 +610,10 @@ async function admGo(el){const val=el.value;const mm=await getMedia(val);if(mm.r
   else{el.classList.add('shake');setTimeout(()=>{el.classList.remove('shake');el.value=''},400)}}
 if(location.hash==='#admin')setTimeout(openAdm,0);
 addEventListener('hashchange',()=>{if(location.hash==='#admin')openAdm()});
+
+document.addEventListener('input',e=>{const t=e.target;if(t&&(t.id==='pass'||t.id==='acode'||t.id==='vpass')){const c=t.value.replace(/[^0-9]/g,'');if(c!==t.value)t.value=c}},true);
+document.addEventListener('focusin',e=>{const t=e.target;if(t&&t.tagName==='INPUT'&&t.getAttribute('inputmode')==='numeric'){try{window.SajdaApp&&SajdaApp.num&&SajdaApp.num(true)}catch(_){}}});
+document.addEventListener('focusout',e=>{try{window.SajdaApp&&SajdaApp.num&&SajdaApp.num(false)}catch(_){}});
 </script>
 </body>
 </html>
