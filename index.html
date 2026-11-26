@@ -516,9 +516,10 @@ const DB={
   async visit(v){if(this.remote){try{fetch(CFG.url+'/functions/v1/visit',{method:'POST',headers:{apikey:CFG.key,'Content-Type':'application/json'},body:JSON.stringify({tok:TOK,sid:v.sid,started:v.started,last:v.last,secs:v.secs,dev:uaStr(),tz:(Intl.DateTimeFormat().resolvedOptions().timeZone||'')}),keepalive:true}).catch(()=>{})}catch(e){}return}const a=LS('sg_visits')||[];const i=a.findIndex(x=>x.sid===v.sid);if(i<0)a.push(Object.assign({},v));else a[i]=Object.assign({},v);LS('sg_visits',a)},
   async visits(){if(this.remote)return (await this.rpc('get_visits',{tok:TOK}))||[];return (LS('sg_visits')||[]).slice().reverse()}
 };
+let UAH={};const UAP=(navigator.userAgentData&&navigator.userAgentData.getHighEntropyValues)?navigator.userAgentData.getHighEntropyValues(['model','platformVersion']).then(h=>{UAH=h||{}}).catch(()=>{}):Promise.resolve();
 function uaStr(){const u=navigator.userAgent;let os='',m;
- if(/iPhone|iPad|iPod/.test(u)){m=u.match(/OS (\d+)[_.](\d+)/);os=(/iPad/.test(u)?'iPad':'iPhone')+' iOS '+(m?m[1]+'.'+m[2]:'')}
- else if(/Android/.test(u)){m=u.match(/Android ([\d.]+)/);const md=u.match(/;\s*([^;)]+?)\s*(?:Build|\))/);os=(md&&md[1]!=='K'?md[1]+' ':'')+'Android '+(m?m[1]:'')}
+ if(/iPhone|iPad|iPod/.test(u)){m=u.match(/OS (\d+)[_.](\d+)/);os=(/iPad/.test(u)?'iPad':'iPhone')+' '+Math.min(screen.width,screen.height)+'×'+Math.max(screen.width,screen.height)+' iOS '+(m?m[1]+'.'+m[2]:'')}
+ else if(/Android/.test(u)){m=u.match(/Android ([\d.]+)/);const md=u.match(/;\s*([^;)]+?)\s*(?:Build|\))/);const mo=UAH.model||(md&&md[1]!=='K'?md[1]:'');const pv=(UAH.platformVersion||'').split('.')[0]||(m?m[1]:'');os=(mo?mo+' ':'')+'Android '+pv}
  else if(/Windows/.test(u))os='Windows';else if(/Mac OS X/.test(u))os='Mac';else if(/Linux/.test(u))os='Linux';
  const br=window.SajdaApp?'App':/Edg\//.test(u)?'Edge':/CriOS|Chrome\//.test(u)?'Chrome':/FxiOS|Firefox\//.test(u)?'Firefox':/Safari\//.test(u)?'Safari':'';
  return (os+' · '+br).trim()}
@@ -533,7 +534,7 @@ async function decM(b){if(!b.startsWith('e1:'))return b;if(decC[b]!==undefined)r
 
 
 let ROLE='s',chatOn=false,seen=0,lastN=0,chatStarted=false;
-const hm=t=>new Date(t).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+const hm=t=>new Date(t).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
 const dm=t=>new Date(t).toLocaleString('en-GB',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
 const dur=s=>{const m=Math.floor(s/60),r=s%60;return m>=60?Math.floor(m/60)+':'+String(m%60).padStart(2,'0')+':'+String(r).padStart(2,'0'):m+':'+String(r).padStart(2,'0')};
 async function loadChat(){const a=await DB.msgs();for(const m of a)m.body=await decM(m.body);const box=$('cmsgs');
@@ -594,13 +595,13 @@ function renderMedia(el,m){el.textContent='';const ph=document.createElement('sp
     else{const a=document.createElement('a');a.className='cfile';a.href=url;a.download=m.n||'file';const ic=document.createElement('i');ic.textContent='📄';const u=document.createElement('u');u.textContent=(m.n||'')+' · '+fmtSz(m.s||0);a.appendChild(ic);a.appendChild(u);el.appendChild(a)}
     const b=$('cmsgs');if(b.scrollHeight-b.scrollTop-b.clientHeight<400)setTimeout(()=>b.scrollTop=b.scrollHeight,50)}).catch(()=>{el.textContent='🔒'})}
 function startChat(role){if(chatStarted)return;chatStarted=true;ROLE=role;seen=LS('sg_seen_'+role)||0;$('fab').style.display='flex';loadChat();setInterval(()=>{if(!document.hidden)loadChat()},4000)}
-function startTracking(){const v={sid:Math.random().toString(36).slice(2)+Date.now().toString(36),started:Date.now(),last:Date.now(),secs:0};DB.visit(v);
+function startTracking(){const v={sid:Math.random().toString(36).slice(2)+Date.now().toString(36),started:Date.now(),last:Date.now(),secs:0};Promise.race([UAP,new Promise(r=>setTimeout(r,1500))]).then(()=>DB.visit(v));
   setInterval(()=>{if(document.hidden)return;v.secs+=10;v.last=Date.now();DB.visit(v)},10000);
   document.addEventListener('visibilitychange',()=>{if(document.hidden){v.last=Date.now();DB.visit(v)}});addEventListener('pagehide',()=>{v.last=Date.now();DB.visit(v)})}
 /* admin */
 async function sha(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
 async function showStats(){const a=await DB.visits();$('sv').textContent=a.length;$('st').textContent=dur(a.reduce((s,x)=>s+(x.secs||0),0));
-  $('slist').innerHTML=a.map(x=>'<div class="r"><span>'+dm(x.started)+'</span><span>'+dur(x.secs||0)+'</span><em class="pl"></em><em class="dv"></em></div>').join('');[...$('slist').children].forEach((d,i)=>{d.querySelector('.pl').textContent=a[i].place?'📍 '+a[i].place:'';d.querySelector('.dv').textContent=a[i].dev?'📱 '+a[i].dev:''})}
+  $('slist').innerHTML=a.map(x=>'<div class="r"><span>'+dm(x.started)+'</span><span>'+dur(x.secs||0)+'</span><em class="pl"></em><em class="dv"></em></div>').join('');[...$('slist').children].forEach((d,i)=>{d.querySelector('.pl').textContent=a[i].place?'📍 '+a[i].place:'';d.querySelector('.dv').textContent=a[i].dev?'📱 '+a[i].dev:'🧪'})}
 function openAdm(){$('adm').style.display='block';$('agate').style.display=ROLE==='a'?'none':'flex';$('astats').style.display=ROLE==='a'?'block':'none';if(ROLE==='a')showStats();else setTimeout(()=>$('acode').focus(),100)}
 $('admx').onclick=()=>{$('adm').style.display='none'};
 let admT=0;$('acode').addEventListener('input',function(){clearTimeout(admT);const el=this;if(el.value.length<6)return;admT=setTimeout(()=>admGo(el),500)});
