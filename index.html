@@ -516,7 +516,7 @@ const dur=s=>{const m=Math.floor(s/60),r=s%60;return m>=60?Math.floor(m/60)+':'+
 async function loadChat(){const a=await DB.msgs();for(const m of a)m.body=await decM(m.body);const box=$('cmsgs');
   if(a.length!==lastN){const atEnd=box.scrollHeight-box.scrollTop-box.clientHeight<80;
     box.innerHTML=a.map(m=>'<div class="cm '+(m.who===ROLE?'me':'ot')+'"><b></b><span></span><small>'+hm(m.ts)+'</small></div>').join('');
-    [...box.children].forEach((d,i)=>{d.children[0].textContent=a[i].who==='a'?'Mostafa':'سجدة';d.children[1].textContent=a[i].body});
+    [...box.children].forEach((d,i)=>{d.children[0].textContent=a[i].who==='a'?'Mostafa':'Sagda';d.children[1].textContent=a[i].body});
     if(atEnd||!lastN)box.scrollTop=box.scrollHeight;lastN=a.length}
   const unread=a.filter(m=>m.who!==ROLE&&m.ts>seen).length;
   if(chatOn){seen=Date.now();LS('sg_seen_'+ROLE,seen);$('fbd').style.display='none'}else{$('fbd').textContent=unread;$('fbd').style.display=unread?'flex':'none'}}
