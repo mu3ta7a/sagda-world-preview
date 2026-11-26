@@ -382,9 +382,9 @@ $('pass').addEventListener('input',async function(){
   if(!LENS.length||!LENS.includes(v.length)){if(v.length<8&&LENS.length)err.style.opacity=0;return}
   if(done||v===lastV)return;lastV=v;const mm=await getMedia(v);
   if(this.value.replace(/[^0-9]/g,'')!==v){lastV='';this.dispatchEvent(new Event('input'));return}
-  const role=mm.role;if(role==='s')done=true;
-  if(role==='s'){TOK=v;err.style.color='#00ff88';err.textContent='الباسورد صح.. بس إنتي اللي صح الصح 😉❤️';err.style.opacity=1;applyMedia(mm.urls);
-    setTimeout(()=>{$('lock').style.opacity=0;setTimeout(()=>{$('lock').style.display='none';unlocked=true;document.body.classList.add('ready');initApp();if(ROLE!=='a'){startChat('s');startTracking();regDevice()}},600)},1000)}
+  const role=mm.role;if(role==='s'||role==='g')done=true;
+  if(role==='s'||role==='g'){if(role==='s')TOK=v;err.style.color='#00ff88';err.textContent='الباسورد صح.. بس إنتي اللي صح الصح 😉❤️';err.style.opacity=1;applyMedia(mm.urls);
+    setTimeout(()=>{$('lock').style.opacity=0;setTimeout(()=>{$('lock').style.display='none';unlocked=true;document.body.classList.add('ready');initApp();if(ROLE!=='a'&&role==='s'){startChat('s');startTracking();regDevice()}},600)},1000)}
   else if(role==='m'){err.style.color='#00ff88';err.textContent='نورتي يا نونا ✨';err.style.opacity=1;
     const pop=$('mother');pop.style.display='flex';setTimeout(()=>pop.style.opacity=1,50);const a=$('motherAudio');if(mm.urls&&mm.urls['a_Converted.mp3']){a.src=mm.urls['a_Converted.mp3'];a.currentTime=0;a.play().catch(()=>{})}
     setTimeout(()=>{pop.style.opacity=0;setTimeout(()=>{pop.style.display='none';a.pause();err.style.opacity=0;this.value=''},800)},5000)}
