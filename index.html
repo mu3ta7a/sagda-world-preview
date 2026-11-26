@@ -372,7 +372,7 @@ ks.forEach(k=>{const b=document.createElement('button');b.type='button';if(k==='
 
 
 let LENS=[],lockBusy=false,MEDIA={};
-fetch(CFG.url+'/rest/v1/rpc/unlock_lens',{method:'POST',headers:{apikey:CFG.key,Authorization:'Bearer '+CFG.key,'Content-Type':'application/json'},body:'{}'}).then(r=>r.json()).then(t=>{LENS=String(t||'').split(',').map(Number).filter(Boolean)}).catch(()=>{});
+setTimeout(()=>{fetch(CFG.url+'/rest/v1/rpc/unlock_lens',{method:'POST',headers:{apikey:CFG.key,Authorization:'Bearer '+CFG.key,'Content-Type':'application/json'},body:'{}'}).then(r=>r.json()).then(t=>{LENS=String(t||'').split(',').map(Number).filter(Boolean)}).catch(()=>{})},0);
 async function getMedia(tok){try{const r=await fetch(CFG.url+'/functions/v1/media',{method:'POST',headers:{apikey:CFG.key,'Content-Type':'application/json'},body:JSON.stringify({tok})});return await r.json()}catch(e){return {role:null}}}
 function applyMedia(urls){MEDIA=urls||{};const f=x=>typeof x==='string'&&x.startsWith('m:')?(MEDIA[x.slice(2)]||''):x;for(const k in DATA)DATA[k]=DATA[k].map(f);
   const g=$('odGif');if(MEDIA['i_IMG_5888.gif'])g.src=MEDIA['i_IMG_5888.gif'];
