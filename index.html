@@ -34,6 +34,7 @@ img{max-width:100%}
 #lock h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.6rem,13vw,3.6rem);line-height:1;color:var(--paper);letter-spacing:.02em;direction:ltr}
 #lock h2 i{display:block;color:var(--gold);font-weight:600}
 #lock p{margin:22px 0 22px;font-size:1.02rem;color:var(--blush)}
+#kp{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px auto 0;max-width:260px;direction:ltr}#kp button{height:54px;border-radius:999px;border:1px solid var(--gold2);background:rgba(255,255,255,.05);color:var(--paper);font:600 1.35rem 'Cormorant Garamond',Georgia,serif;font-variant-numeric:lining-nums;font-feature-settings:'lnum' 1;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation;padding:0}#kp button:active{background:rgba(217,184,120,.25)}#kp svg{width:22px;height:22px;stroke:var(--gold);fill:none;stroke-width:1.8}
 .pass{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--gold2);border-radius:999px;padding:15px 20px;color:var(--paper);font-size:1.15rem;text-align:center;font-family:inherit;outline:0;letter-spacing:.2em;-webkit-appearance:none}
 .pass::placeholder{letter-spacing:0;color:rgba(248,240,231,.5)}
 .pass:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(230,201,143,.15)}
@@ -241,8 +242,9 @@ nav a.cur{background:rgba(230,201,143,.16);border-color:var(--gold);color:var(--
 <div id="lock"><div class="box">
   <h2>SAGDA'S <i>ZONE</i></h2>
   <p>⛔ للجميلات فقط.. ممنوع دخول أي حد غيرها</p>
-  <input type="tel" inputmode="numeric" pattern="[0-9]*" id="pass" class="pass" placeholder="تاريخ الحكاية 💍" autocomplete="off">
-  <div id="err" class="err">مش عارفة التاريخ؟! أخص عليكي 😂💔</div>
+  <input type="tel" inputmode="none" readonly pattern="[0-9]*" id="pass" class="pass" placeholder="تاريخ الحكاية 💍" autocomplete="off">
+  <div id="kp"></div>
+   <div id="err" class="err">مش عارفة التاريخ؟! أخص عليكي 😂💔</div>
 </div></div>
 <div id="mother">نورتي مكان سجدة يا نونا</div>
 <audio id="motherAudio" preload="none"><source src="https://raw.githubusercontent.com/mu3ta7a/VIBES/refs/heads/main/Converted.mp3" type="audio/mpeg"></audio>
@@ -340,7 +342,7 @@ nav a.cur{background:rgba(230,201,143,.16);border-color:var(--gold);color:var(--
 <div id="chat"><div class="hd"><button id="cx" aria-label="close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div id="cmsgs"></div>
 <form id="cform" autocomplete="off"><textarea id="cin" rows="1" enterkeyhint="send"></textarea><button type="submit" id="csend" aria-label="send"><svg viewBox="0 0 24 24"><path d="M3 20.5v-6.8l11-1.7-11-1.7V3.5L22 12z"/></svg></button></form></div>
 <div id="adm"><button class="x" id="admx" aria-label="close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-<div class="gate" id="agate"><input id="acode" type="password" inputmode="numeric" autocomplete="off"></div>
+<div class="gate" id="agate"><input id="acode" type="password" inputmode="text" autocomplete="off"></div>
 <div class="stats" id="astats"><div class="sg"><div class="sc"><svg viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><div id="sv">0</div></div><div class="sc"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div id="st">0:00</div></div></div><div class="sl" id="slist"></div></div></div>
 <div id="lb"><button class="x" onclick="closeLb()">✕</button><img id="lbImg" alt=""></div>
 <script>
@@ -364,6 +366,10 @@ document.querySelectorAll('.yr').forEach(e=>e.textContent=yr);
 
 /* lock screen */
 let unlocked=false,motherMode=false;
+(function(){const kp=$('kp'),p=$('pass');const ks=['1','2','3','4','5','6','7','8','9','','0','x'];
+ks.forEach(k=>{const b=document.createElement('button');b.type='button';if(k==='x'){b.setAttribute('aria-label','delete');b.innerHTML='<svg viewBox="0 0 24 24"><path d="M21 5H9l-6 7 6 7h12z"/><path d="M13 9.5l5 5M18 9.5l-5 5"/></svg>'}else if(k===''){b.style.visibility='hidden'}else b.textContent=k;
+ b.addEventListener('click',()=>{if(k==='')return;p.value=k==='x'?p.value.slice(0,-1):(p.value+k).slice(0,8);p.dispatchEvent(new Event('input'))});kp.appendChild(b)})})();
+
 $('pass').addEventListener('input',function(){
   const v=this.value.replace(/[^0-9]/g,'');
   const s=(v==='1311'||v==='13112025'),m=(v==='58'||v==='0508'||v==='581990'||v==='05081990');
