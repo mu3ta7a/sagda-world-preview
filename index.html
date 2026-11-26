@@ -214,6 +214,7 @@ nav a.cur{background:rgba(230,201,143,.16);border-color:var(--gold);color:var(--
 #chat .hd button svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round}
 #cmsgs{flex:1;overflow-y:auto;padding:10px 16px;display:flex;flex-direction:column;gap:8px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .cm{max-width:78%;padding:10px 14px 7px;border-radius:20px;font-size:1rem;line-height:1.7;word-break:break-word;white-space:pre-wrap}
+.cm b{display:block;font-size:.72rem;font-weight:700;opacity:.75;margin-bottom:1px;font-family:'Cairo',sans-serif}
 .cm small{display:block;font-size:.66rem;opacity:.6;margin-top:2px;direction:ltr;text-align:left;font-family:'Cairo',sans-serif}
 .cm.me{align-self:flex-start;background:linear-gradient(160deg,var(--gold),var(--gold2));color:#2a0c17;border-bottom-left-radius:6px}
 .cm.ot{align-self:flex-end;background:rgba(255,255,255,.08);color:var(--blush);border:1px solid rgba(230,201,143,.16);border-bottom-right-radius:6px}
@@ -514,8 +515,8 @@ const dm=t=>new Date(t).toLocaleString('en-GB',{day:'2-digit',month:'2-digit',ho
 const dur=s=>{const m=Math.floor(s/60),r=s%60;return m>=60?Math.floor(m/60)+':'+String(m%60).padStart(2,'0')+':'+String(r).padStart(2,'0'):m+':'+String(r).padStart(2,'0')};
 async function loadChat(){const a=await DB.msgs();for(const m of a)m.body=await decM(m.body);const box=$('cmsgs');
   if(a.length!==lastN){const atEnd=box.scrollHeight-box.scrollTop-box.clientHeight<80;
-    box.innerHTML=a.map(m=>'<div class="cm '+(m.who===ROLE?'me':'ot')+'"><span></span><small>'+hm(m.ts)+'</small></div>').join('');
-    [...box.children].forEach((d,i)=>d.firstChild.textContent=a[i].body);
+    box.innerHTML=a.map(m=>'<div class="cm '+(m.who===ROLE?'me':'ot')+'"><b></b><span></span><small>'+hm(m.ts)+'</small></div>').join('');
+    [...box.children].forEach((d,i)=>{d.children[0].textContent=a[i].who==='a'?'Mostafa':'سجدة';d.children[1].textContent=a[i].body});
     if(atEnd||!lastN)box.scrollTop=box.scrollHeight;lastN=a.length}
   const unread=a.filter(m=>m.who!==ROLE&&m.ts>seen).length;
   if(chatOn){seen=Date.now();LS('sg_seen_'+ROLE,seen);$('fbd').style.display='none'}else{$('fbd').textContent=unread;$('fbd').style.display=unread?'flex':'none'}}
