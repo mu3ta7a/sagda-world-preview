@@ -513,7 +513,7 @@ const DB={
   async check(c){return this.remote?!!(await this.rpc('check_admin',{tok:c})):false},
   async msgs(){if(this.remote)return (await this.rpc('get_msgs',{tok:TOK}))||[];return LS('sg_msgs')||[]},
   async send(m){if(this.remote)return this.rpc('send_msg',{tok:TOK,body:m.body});const a=LS('sg_msgs')||[];a.push(m);LS('sg_msgs',a)},
-  async visit(v){if(this.remote){try{fetch(CFG.url+'/functions/v1/visit',{method:'POST',headers:{apikey:CFG.key,'Content-Type':'application/json'},body:JSON.stringify({tok:TOK,sid:v.sid,started:v.started,last:v.last,secs:v.secs,dev:uaStr()}),keepalive:true}).catch(()=>{})}catch(e){}return}const a=LS('sg_visits')||[];const i=a.findIndex(x=>x.sid===v.sid);if(i<0)a.push(Object.assign({},v));else a[i]=Object.assign({},v);LS('sg_visits',a)},
+  async visit(v){if(this.remote){try{fetch(CFG.url+'/functions/v1/visit',{method:'POST',headers:{apikey:CFG.key,'Content-Type':'application/json'},body:JSON.stringify({tok:TOK,sid:v.sid,started:v.started,last:v.last,secs:v.secs,dev:uaStr(),tz:(Intl.DateTimeFormat().resolvedOptions().timeZone||'')}),keepalive:true}).catch(()=>{})}catch(e){}return}const a=LS('sg_visits')||[];const i=a.findIndex(x=>x.sid===v.sid);if(i<0)a.push(Object.assign({},v));else a[i]=Object.assign({},v);LS('sg_visits',a)},
   async visits(){if(this.remote)return (await this.rpc('get_visits',{tok:TOK}))||[];return (LS('sg_visits')||[]).slice().reverse()}
 };
 function uaStr(){const u=navigator.userAgent;let os='',m;
