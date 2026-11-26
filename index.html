@@ -468,7 +468,7 @@ s.addEventListener('pointerdown',e=>{dn=true;s.setPointerCapture&&s.setPointerCa
 
 
 /* chat + visits */
-const CFG={url:'',key:'',admHash:'e25f201f9014599e00073db598a2603a9c05766965336d9b9c68c3d4081ee9a3'};
+const CFG={url:'https://qsswictndrsuvevxbaur.supabase.co',key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFzc3dpY3RuZHJzdXZldnhiYXVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTU3MTk4MjQsImV4cCI6MjExMTI5NTgyNH0.nlWOpUkieuvDvgqR4mpYv7FQrcE0sOpDfvFG5IYmF9g',admHash:'e25f201f9014599e00073db598a2603a9c05766965336d9b9c68c3d4081ee9a3'};
 const LS=(k,v)=>{try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||'null');localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}};
 const DB={
   remote:!!(CFG.url&&CFG.key),
