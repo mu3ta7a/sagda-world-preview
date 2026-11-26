@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0e0709">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sagda's WORLD">
 <title>Sagda's World 👑</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -723,6 +729,8 @@ const _cc=closeChat;closeChat=function(){closePanel();closeMenu();_cc()};$('cx')
   const pad=document.createElement('div');pad.className='npad on';
   ['1','2','3','4','5','6','7','8','9','','0','⌫'].forEach(k=>{const b=document.createElement('button');b.type='button';if(!k){b.style.visibility='hidden';pad.appendChild(b);return}b.textContent=k;b.onclick=()=>{const ml=inp.maxLength>0?inp.maxLength:8;if(k==='⌫')inp.value=inp.value.slice(0,-1);else if(inp.value.length<ml)inp.value+=k;inp.dispatchEvent(new Event('input',{bubbles:true}))};pad.appendChild(b)});
   inp.insertAdjacentElement('afterend',pad)})})();
+
+if('serviceWorker' in navigator&&!window.SajdaApp)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
 </body>
 </html>
